@@ -68,9 +68,8 @@ export function UploadInvoiceModal({ isOpen, onClose }: Props) {
     setTxStatus("Signing transaction with Freighter...")
 
     try {
-      // Step 1: Mint the invoice on-chain
       setTxStatus("Minting invoice on Soroban...")
-      const mintResult = await mintInvoice(
+      await mintInvoice(
         publicKey,
         "TechCorp Inc.",
         5000,      // $5,000 face value
@@ -80,26 +79,14 @@ export function UploadInvoiceModal({ isOpen, onClose }: Props) {
         "A+"       // risk grade
       )
 
-      if (mintResult === "success") {
-        // Step 2: List on marketplace
-        setTxStatus("Listing on marketplace...")
-        await listInvoice(
-          publicKey,
-          1, // invoice ID (would come from mint result in production)
-          4800,  // asking price
-          5000,  // face value
-          Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
-          "A+"
-        )
-      }
-
       setUploadState("minted")
       setTxStatus("Transaction confirmed ✓")
     } catch (error) {
       console.error("Transaction failed:", error)
-      // If contract call fails (not deployed), show success anyway for demo
-      setUploadState("minted")
-      setTxStatus("Demo mode — contract not deployed yet")
+      const err = error instanceof Error ? error.message : String(error)
+      setTxStatus(`Failed: ${err}`)
+      // Revert to approved state so they can try again
+      setTimeout(() => setUploadState("approved"), 3000)
     }
   }
 
@@ -197,7 +184,7 @@ export function UploadInvoiceModal({ isOpen, onClose }: Props) {
                 onClick={handleMintAndList}
               >
                 <ShieldCheck className="w-4 h-4" />
-                Mint &amp; List to Market
+                Mint Invoice on Soroban
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>

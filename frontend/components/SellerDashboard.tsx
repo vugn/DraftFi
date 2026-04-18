@@ -7,37 +7,7 @@ import { getSellerInvoiceIds, getInvoice } from "@/lib/stellar"
 import { type Invoice, InvoiceStatus, formatUSDC, fromStroops } from "@/lib/contracts"
 import { RefreshCw } from "lucide-react"
 
-// Mock invoices for demo when no contracts are deployed
-const MOCK_INVOICES = [
-  {
-    id: 1024,
-    client: "TechCorp Inc.",
-    amount: "$5,000.00",
-    dueDate: "Oct 30, 2026",
-    status: "AI Reviewing",
-  },
-  {
-    id: 1025,
-    client: "Acme Logistics",
-    amount: "$2,450.00",
-    dueDate: "Nov 15, 2026",
-    status: "Listed on Market",
-  },
-  {
-    id: 1026,
-    client: "Global Web Dev",
-    amount: "$8,000.00",
-    dueDate: "Oct 05, 2026",
-    status: "Funded",
-  },
-  {
-    id: 1027,
-    client: "Design Flow Lab",
-    amount: "$1,200.00",
-    dueDate: "Dec 10, 2026",
-    status: "Listed on Market",
-  },
-]
+// Removed MOCK_INVOICES
 
 function formatDate(timestamp: number): string {
   return new Date(timestamp * 1000).toLocaleDateString("en-US", {
@@ -111,12 +81,8 @@ export function SellerDashboard() {
   }, [isConnected, loadOnChainInvoices])
 
   // Calculate stats
-  const totalFunded = useOnChain
-    ? invoices.filter(i => i.status === InvoiceStatus.Funded || i.status === InvoiceStatus.Settled).reduce((sum, i) => sum + fromStroops(i.offeredAmount), 0)
-    : 4800
-  const totalInReview = useOnChain
-    ? invoices.filter(i => i.status === InvoiceStatus.PendingReview || i.status === InvoiceStatus.Approved).reduce((sum, i) => sum + fromStroops(i.amount), 0)
-    : 12500
+  const totalFunded = invoices.filter(i => i.status === InvoiceStatus.Funded || i.status === InvoiceStatus.Settled).reduce((sum, i) => sum + fromStroops(i.offeredAmount), 0)
+  const totalInReview = invoices.filter(i => i.status === InvoiceStatus.PendingReview || i.status === InvoiceStatus.Approved).reduce((sum, i) => sum + fromStroops(i.amount), 0)
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1200px] mx-auto animate-in fade-in duration-500">
@@ -153,10 +119,7 @@ export function SellerDashboard() {
         <div className="bg-[#FFFFFF] p-[20px] rounded-[10px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
             <div className="text-[12px] font-medium text-[#6B7280] uppercase tracking-[0.5px]">Available Funds</div>
             <div className="text-[20px] font-bold text-[#111827] mt-[8px]">
-              {useOnChain
-                ? `${usdcBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })} USDC`
-                : "$4,800.00 USDC"
-              }
+              {`${usdcBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })} USDC`}
             </div>
         </div>
         <div className="bg-[#FFFFFF] p-[20px] rounded-[10px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
@@ -193,7 +156,7 @@ export function SellerDashboard() {
             </tr>
           </thead>
           <tbody>
-            {useOnChain && invoices.length > 0 ? (
+            {invoices.length > 0 ? (
               invoices.map((invoice, index) => {
                 const label = statusLabel(invoice.status)
                 return (
@@ -214,9 +177,9 @@ export function SellerDashboard() {
                     </td>
                     <td className={`py-[16px] px-[20px] ${index !== invoices.length - 1 ? 'border-b border-[#F3F4F6]' : ''}`}>
                       {invoice.status === InvoiceStatus.Funded || invoice.status === InvoiceStatus.Settled ? (
-                        <a href="#" className="text-[#2563EB] font-semibold text-[13px] no-underline hover:underline">Withdraw USDC</a>
+                        <button className="text-[#2563EB] font-semibold text-[13px] hover:underline bg-transparent border-none cursor-pointer">Withdraw USDC</button>
                       ) : invoice.status === InvoiceStatus.Listed ? (
-                        <a href="#" className="text-[#2563EB] font-semibold text-[13px] no-underline hover:underline">View Listing</a>
+                        <button className="text-[#2563EB] font-semibold text-[13px] hover:underline bg-transparent border-none cursor-pointer">View Listing</button>
                       ) : (
                         <span className="text-[#6B7280] text-[14px]">Processing...</span>
                       )}
@@ -225,32 +188,11 @@ export function SellerDashboard() {
                 )
               })
             ) : (
-              // Fallback to mock data
-              MOCK_INVOICES.map((invoice, index) => (
-                <tr key={invoice.id}>
-                  <td className={`py-[16px] px-[20px] text-[14px] ${index !== MOCK_INVOICES.length - 1 ? 'border-b border-[#F3F4F6]' : ''}`}>
-                    <strong className="font-bold text-[#111827]">{invoice.client}</strong>
-                  </td>
-                  <td className={`py-[16px] px-[20px] text-[14px] text-[#111827] ${index !== MOCK_INVOICES.length - 1 ? 'border-b border-[#F3F4F6]' : ''}`}>{invoice.amount}</td>
-                  <td className={`py-[16px] px-[20px] text-[14px] text-[#111827] ${index !== MOCK_INVOICES.length - 1 ? 'border-b border-[#F3F4F6]' : ''}`}>{invoice.dueDate}</td>
-                  <td className={`py-[16px] px-[20px] ${index !== MOCK_INVOICES.length - 1 ? 'border-b border-[#F3F4F6]' : ''}`}>
-                    <span 
-                      className={`px-[8px] py-[4px] rounded-[4px] text-[11px] font-semibold ${statusColor(invoice.status)}`}
-                    >
-                      {invoice.status}
-                    </span>
-                  </td>
-                  <td className={`py-[16px] px-[20px] ${index !== MOCK_INVOICES.length - 1 ? 'border-b border-[#F3F4F6]' : ''}`}>
-                    {invoice.status === 'Funded' ? (
-                      <a href="#" className="text-[#2563EB] font-semibold text-[13px] no-underline hover:underline">Withdraw USDC</a>
-                    ) : invoice.status === 'Listed on Market' ? (
-                      <a href="#" className="text-[#2563EB] font-semibold text-[13px] no-underline hover:underline">View Listing</a>
-                    ) : (
-                      <span className="text-[#6B7280] text-[14px]">Processing...</span>
-                    )}
-                  </td>
-                </tr>
-              ))
+              <tr>
+                <td colSpan={5} className="py-[32px] px-[20px] text-center text-[#6B7280] text-[14px]">
+                  {isLoadingOnChain ? "Loading invoices from blockchain..." : "No invoices found on the blockchain. Click '+ Upload New Invoice' to start!"}
+                </td>
+              </tr>
             )}
           </tbody>
         </table>

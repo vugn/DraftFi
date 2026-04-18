@@ -132,7 +132,10 @@ async function invokeContract(
   });
 
   if (signResult.error) {
-    throw new Error(`Signing failed: ${signResult.error}`);
+    const errorMsg = typeof signResult.error === 'string' 
+      ? signResult.error 
+      : JSON.stringify(signResult.error);
+    throw new Error(`Signing failed: ${errorMsg}`);
   }
 
   const signedTx = StellarSdk.TransactionBuilder.fromXDR(
