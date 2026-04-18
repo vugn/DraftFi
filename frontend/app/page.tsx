@@ -1,22 +1,23 @@
 "use client"
 
-import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Navbar } from "@/components/Navbar"
 import { SellerDashboard } from "@/components/SellerDashboard"
 import { LPMarketplace } from "@/components/LPMarketplace"
+import { EscrowStatus } from "@/components/EscrowStatus"
 import { AuthScreen } from "@/components/AuthScreen"
+import { WalletProvider, useWallet } from "@/components/WalletContext"
 
-export default function Home() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+function AppContent() {
+  const { isConnected } = useWallet()
 
-  if (!isAuthenticated) {
-    return <AuthScreen onLogin={() => setIsAuthenticated(true)} />
+  if (!isConnected) {
+    return <AuthScreen />
   }
 
   return (
     <div className="flex flex-col h-[100dvh] w-full bg-[#FAFAFA] text-[#111827] font-sans overflow-hidden">
-      <Navbar onLogout={() => setIsAuthenticated(false)} />
+      <Navbar />
       <main className="flex flex-grow overflow-hidden">
         <Tabs defaultValue="seller" orientation="vertical" className="flex flex-row w-full h-full gap-0 bg-[#FAFAFA]">
           {/* Sidebar */}
@@ -53,6 +54,14 @@ export default function Home() {
                 Settings
               </TabsTrigger>
             </TabsList>
+
+            {/* Network indicator at bottom of sidebar */}
+            <div className="mt-auto px-6 pt-4 border-t border-[#F3F4F6]">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-[#4ADE80] animate-pulse" />
+                <span className="text-[11px] font-medium text-[#6B7280]">Stellar Testnet</span>
+              </div>
+            </div>
           </aside>
 
           {/* Content Area */}
@@ -63,18 +72,11 @@ export default function Home() {
             <TabsContent value="lp" className="m-0 p-8 outline-none">
               <LPMarketplace />
             </TabsContent>
-            
-            {/* Placeholder screens for demo completeness */}
             <TabsContent value="escrow" className="m-0 p-8 outline-none">
-              <div className="flex flex-col gap-6 w-full max-w-[1200px] mx-auto animate-in fade-in duration-500">
-                <h1 className="text-[28px] font-bold tracking-tight text-[#111827]">Escrow Status</h1>
-                <p className="text-[#6B7280] mt-1 text-[16px]">Track funds locked in Soroban smart contracts.</p>
-                <div className="bg-[#FFFFFF] p-12 rounded-[10px] border border-[#E5E7EB] flex items-center justify-center text-[#6B7280] border-dashed mt-4">
-                  Under Development (Demo Build)
-                </div>
-              </div>
+              <EscrowStatus />
             </TabsContent>
             
+            {/* Placeholder screens */}
             <TabsContent value="history" className="m-0 p-8 outline-none">
               <div className="flex flex-col gap-6 w-full max-w-[1200px] mx-auto animate-in fade-in duration-500">
                 <h1 className="text-[28px] font-bold tracking-tight text-[#111827]">History</h1>
@@ -98,5 +100,13 @@ export default function Home() {
         </Tabs>
       </main>
     </div>
+  )
+}
+
+export default function Home() {
+  return (
+    <WalletProvider>
+      <AppContent />
+    </WalletProvider>
   )
 }

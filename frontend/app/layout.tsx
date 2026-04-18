@@ -6,8 +6,9 @@ import { cn } from "@/lib/utils";
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
-  title: 'My Google AI Studio App',
-  description: 'My Google AI Studio App',
+  title: 'DraftFi — Invoice Factoring on Stellar',
+  description: 'Convert unpaid B2B invoices into instant liquidity using Soroban smart contracts on the Stellar network. AI-powered underwriting, trustless escrow, and USDC settlements.',
+  keywords: ['DraftFi', 'invoice factoring', 'Stellar', 'Soroban', 'DeFi', 'USDC', 'smart contracts'],
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

@@ -1,20 +1,10 @@
 "use client"
 
-import { useState } from "react"
-import { ArrowRight, Lock, Mail, User } from "lucide-react"
+import { useWallet } from "./WalletContext"
+import { ArrowRight, Wallet, Loader2, AlertCircle } from "lucide-react"
 
-interface Props {
-  onLogin: () => void
-}
-
-export function AuthScreen({ onLogin }: Props) {
-  const [isSignUp, setIsSignUp] = useState(false)
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Mocking authentication for UI purposes
-    onLogin()
-  }
+export function AuthScreen() {
+  const { connect, isLoading, error } = useWallet()
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex flex-col justify-center items-center p-4 selection:bg-blue-100">
@@ -32,106 +22,78 @@ export function AuthScreen({ onLogin }: Props) {
         <div className="bg-[#FFFFFF] border border-[#E5E7EB] rounded-[12px] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-1px_rgba(0,0,0,0.03)] overflow-hidden">
           <div className="p-[32px]">
             <h1 className="text-[20px] font-bold text-[#111827] mb-2 text-center">
-              {isSignUp ? "Create an account" : "Welcome back"}
+              Connect Your Wallet
             </h1>
             <p className="text-[14px] text-[#6B7280] text-center mb-8">
-              {isSignUp ? "Enter your details to get started" : "Enter your credentials to access your account"}
+              Connect your Stellar wallet to access invoice factoring on DraftFi.
             </p>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {isSignUp && (
-                <div>
-                  <label className="block text-[12px] font-semibold text-[#111827] uppercase tracking-[0.5px] mb-2">
-                    Full Name
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <User className="h-4 w-4 text-[#9CA3AF]" />
-                    </div>
-                    <input 
-                      type="text" 
-                      placeholder="John Doe"
-                      className="block w-full pl-10 pr-3 py-[10px] border border-[#E5E7EB] rounded-[6px] text-[14px] text-[#111827] placeholder-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB] transition-all bg-[#F9FAFB] focus:bg-[#FFFFFF]"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <label className="block text-[12px] font-semibold text-[#111827] uppercase tracking-[0.5px] mb-2">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-4 w-4 text-[#9CA3AF]" />
-                  </div>
-                  <input 
-                    type="email" 
-                    placeholder="you@company.com"
-                    className="block w-full pl-10 pr-3 py-[10px] border border-[#E5E7EB] rounded-[6px] text-[14px] text-[#111827] placeholder-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB] transition-all bg-[#F9FAFB] focus:bg-[#FFFFFF]"
-                    required
-                  />
-                </div>
+            {/* Error message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 rounded-[6px] p-3 mb-4 flex items-start gap-2 text-[13px] animate-in fade-in duration-300">
+                <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+                <span>{error}</span>
               </div>
+            )}
 
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-[12px] font-semibold text-[#111827] uppercase tracking-[0.5px]">
-                    Password
-                  </label>
-                  {!isSignUp && (
-                    <a href="#" className="text-[12px] font-medium text-[#2563EB] hover:underline">
-                      Forgot password?
-                    </a>
-                  )}
-                </div>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-4 w-4 text-[#9CA3AF]" />
-                  </div>
-                  <input 
-                    type="password" 
-                    placeholder="••••••••"
-                    className="block w-full pl-10 pr-3 py-[10px] border border-[#E5E7EB] rounded-[6px] text-[14px] text-[#111827] placeholder-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB] transition-all bg-[#F9FAFB] focus:bg-[#FFFFFF]"
-                    required
-                  />
-                </div>
-              </div>
+            {/* Freighter Wallet Connect Button */}
+            <div className="space-y-3">
+              <button 
+                onClick={connect}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center bg-[#2563EB] hover:bg-[#1D4ED8] disabled:bg-[#93C5FD] text-[#FFFFFF] h-[52px] text-[14px] font-semibold rounded-[6px] transition-colors border-none cursor-pointer group"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Connecting...
+                  </>
+                ) : (
+                  <>
+                    <Wallet className="mr-2 h-5 w-5" />
+                    Connect Freighter Wallet
+                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </button>
+            </div>
 
-              <div className="pt-2">
-                <button 
-                  type="submit"
-                  className="w-full flex items-center justify-center bg-[#2563EB] hover:bg-[#1D4ED8] text-[#FFFFFF] h-[44px] text-[14px] font-semibold rounded-[6px] transition-colors border-none cursor-pointer group"
+            {/* Help text */}
+            <div className="mt-6 text-center">
+              <p className="text-[12px] text-[#9CA3AF]">
+                Don&apos;t have Freighter?{" "}
+                <a 
+                  href="https://freighter.app" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-[#2563EB] font-medium hover:underline"
                 >
-                  {isSignUp ? "Create Account" : "Sign In"}
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </div>
-            </form>
+                  Download here →
+                </a>
+              </p>
+            </div>
           </div>
           
-          {/* Footer toggle */}
-          <div className="bg-[#F9FAFB] border-t border-[#E5E7EB] px-[32px] py-[20px] text-center">
-            <p className="text-[13px] text-[#6B7280]">
-              {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
-              <button 
-                type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="font-semibold text-[#2563EB] hover:underline bg-transparent border-none cursor-pointer"
-              >
-                {isSignUp ? "Sign In" : "Sign Up"}
-              </button>
-            </p>
+          {/* Info footer */}
+          <div className="bg-[#F9FAFB] border-t border-[#E5E7EB] px-[32px] py-[20px]">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-[#EFF6FF] rounded-full flex items-center justify-center shrink-0">
+                <Wallet className="w-4 h-4 text-[#2563EB]" />
+              </div>
+              <p className="text-[12px] text-[#6B7280] leading-relaxed">
+                DraftFi uses <strong className="text-[#111827]">Soroban smart contracts</strong> on the Stellar network for trustless invoice settlement.
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Dummy Trust Indicators */}
+        {/* Trust Indicators */}
         <div className="mt-8 text-center">
           <p className="text-[12px] font-medium text-[#9CA3AF] uppercase tracking-[0.5px] mb-4">Secured by</p>
           <div className="flex justify-center items-center gap-6 opacity-50 grayscale">
             <span className="text-[14px] font-bold text-[#6B7280]">Stellar</span>
             <span className="text-[14px] font-bold text-[#6B7280]">Soroban</span>
+            <span className="text-[14px] font-bold text-[#6B7280]">Freighter</span>
           </div>
         </div>
 
