@@ -30,7 +30,10 @@ interface WalletState {
 const WalletContext = createContext<WalletState | undefined>(undefined)
 
 export function WalletProvider({ children }: { children: ReactNode }) {
-  const [publicKey, setPublicKey] = useState("")
+  const demoBypassWallet = process.env.NEXT_PUBLIC_BYPASS_WALLET_FOR_DEMO === "true"
+  const [publicKey, setPublicKey] = useState(
+    demoBypassWallet ? "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF" : ""
+  )
   const [usdcBalance, setUsdcBalance] = useState(0)
   const [xlmBalance, setXlmBalance] = useState("0")
   const [isLoading, setIsLoading] = useState(false)
@@ -85,12 +88,14 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   // Check if wallet was previously connected
   useEffect(() => {
+    if (demoBypassWallet) return
+
     checkWalletConnection().then((connected) => {
       if (connected) {
         connect()
       }
     })
-  }, [connect])
+  }, [connect, demoBypassWallet])
 
   return (
     <WalletContext.Provider

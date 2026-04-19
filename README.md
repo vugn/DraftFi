@@ -1,5 +1,50 @@
 # DraftFi: The Invisible Invoice Liquidity Protocol
 
+## 0. Testnet Deployment (All Contract IDs)
+
+Network: Stellar Testnet  
+Network Passphrase: Test SDF Network ; September 2015  
+Soroban RPC: https://soroban-testnet.stellar.org  
+Horizon: https://horizon-testnet.stellar.org
+
+| Contract         | Testnet Contract ID                                      |
+| ---------------- | -------------------------------------------------------- |
+| Invoice Registry | CAVXMNHXEJDSLRZRV5FVSLCUQE2MSTAHVDNMM7R4JAGJEHGDGIBH7S65 |
+| Marketplace      | CARGBDS37Q5ZWWIKFSEDA2AIRF5MDZWMGWFSGCKULR66X6BBLM44FDHD |
+| Escrow           | CDKGNHOJTXQVRXA242YMLSRMCITAAZYG7VZ5E2C5PFADQUO7G76O7WCB |
+| DraftFi Core     | CCBFEMK44JL6VMTYGQ2U4T6B5ASEOZWREYH4QNMPEFLF7DDEN7TWERT4 |
+| USDC Token       | CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC |
+
+These contract IDs are sourced from the frontend testnet environment configuration.
+
+## 0.1 App Screenshots
+
+All screenshots below were captured automatically from the local app and saved in the assets folder.
+
+### Auth Screen
+
+![DraftFi Auth Screen](assets/screenshots/01-auth-screen.png)
+
+### Seller Dashboard
+
+![DraftFi Seller Dashboard](assets/screenshots/02-seller-dashboard.png)
+
+### Marketplace
+
+![DraftFi Marketplace](assets/screenshots/03-marketplace.png)
+
+### Escrow Status
+
+![DraftFi Escrow Status](assets/screenshots/04-escrow-status.png)
+
+### History
+
+![DraftFi History](assets/screenshots/05-history.png)
+
+### Settings
+
+![DraftFi Settings](assets/screenshots/06-settings.png)
+
 ## 1. Project Overview
 
 DraftFi is a next-generation decentralized invoice factoring exchange. It bridges the gap between traditional B2B finance and the Stellar blockchain by allowing freelancers, remote engineers, and agencies to convert their outstanding invoices into instant USDC liquidity. By utilizing AI-powered OSINT (Open-Source Intelligence) for underwriting and Soroban smart contracts for trustless settlement, DraftFi eliminates the standard 30-90 day waiting period for payments.
