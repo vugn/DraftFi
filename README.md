@@ -1,6 +1,49 @@
-# DraftFi: The Invisible Invoice Liquidity Protocol
+# DraftFi
 
-## 0. Testnet Deployment (All Contract IDs)
+DraftFi is a Stellar-native invoice liquidity protocol that helps freelancers and SMB agencies turn unpaid invoices into instant USDC cash flow.
+
+It combines AI-assisted underwriting with Soroban smart contracts to create a transparent, low-friction, community-funded financing rail for the global remote economy.
+
+## Problem
+
+Small teams and independent professionals often wait 30 to 90 days for invoice payments.
+
+That delay creates a cash-flow gap that blocks growth, payroll, and delivery capacity. Traditional factoring is slow, opaque, and often inaccessible to smaller operators.
+
+## Solution
+
+DraftFi creates a programmable invoice financing market:
+
+1. Seller submits invoice data.
+2. Underwriting assigns risk profile.
+3. Invoice is listed on-chain.
+4. Liquidity provider funds the invoice in USDC.
+5. Seller receives immediate payout.
+6. Escrow and settlement logic enforce transparent release conditions.
+
+## Product Highlights
+
+- AI-assisted underwriting to speed up decisioning.
+- Soroban contracts for listing, funding, escrow, and protocol controls.
+- USDC-based settlement on Stellar testnet.
+- Clean, simple UX for non-crypto-native users.
+
+## Technical Architecture
+
+### Smart Contracts
+
+- DraftFi Core: Protocol config, fee controls, risk threshold, pause controls.
+- Invoice Registry: Invoice minting, status lifecycle, seller indexing.
+- Marketplace: Listing and LP funding logic.
+- Escrow: Hold, release, dispute, and resolution flows.
+
+### Frontend Stack
+
+- Next.js application for seller and LP workflows.
+- Stellar wallet integration for transaction signing.
+- Contract SDK wrappers for typed contract interactions.
+
+## Stellar Testnet Deployment
 
 Network: Stellar Testnet  
 Network Passphrase: Test SDF Network ; September 2015  
@@ -15,11 +58,9 @@ Horizon: https://horizon-testnet.stellar.org
 | DraftFi Core     | CCBFEMK44JL6VMTYGQ2U4T6B5ASEOZWREYH4QNMPEFLF7DDEN7TWERT4 |
 | USDC Token       | CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC |
 
-These contract IDs are sourced from the frontend testnet environment configuration.
+## Demo Screenshots
 
-## 0.1 App Screenshots
-
-All screenshots below were captured automatically from the local app and saved in the assets folder.
+All screenshots below were captured automatically from the local app.
 
 ### Auth Screen
 
@@ -45,54 +86,21 @@ All screenshots below were captured automatically from the local app and saved i
 
 ![DraftFi Settings](assets/screenshots/06-settings.png)
 
-## 1. Project Overview
+## Business Model
 
-DraftFi is a next-generation decentralized invoice factoring exchange. It bridges the gap between traditional B2B finance and the Stellar blockchain by allowing freelancers, remote engineers, and agencies to convert their outstanding invoices into instant USDC liquidity. By utilizing AI-powered OSINT (Open-Source Intelligence) for underwriting and Soroban smart contracts for trustless settlement, DraftFi eliminates the standard 30-90 day waiting period for payments.
+- Origination fee per funded invoice.
+- Spread between discounted purchase and invoice face value.
+- Settlement and service fees for payment routing workflows.
 
-## 2. The Problem: The "Cash Flow Death Valley"
+## Roadmap
 
-The borderless economy is growing, yet cross-border B2B payments remain archaic. Remote professionals and small agencies often face "Net-30" or "Net-60" payment terms. They complete high-value work today but must wait months for corporate clients to settle the bill. Traditional factoring services are inaccessible to solo developers due to high entry barriers, manual bureaucracy, and lack of transparency.
+- Mainnet-ready deployment hardening and monitoring.
+- More underwriting data connectors and score explainability.
+- LP analytics and performance dashboards.
+- Anchor and payment rail integrations for end-to-end settlement.
 
-## 3. The Solution: DraftFi
+## Vision
 
-DraftFi provides a "zero-touch" liquidity engine:
+DraftFi aims to become the default liquidity layer for invoice-backed cash flow in the Stellar ecosystem.
 
-- **Invisible Blockchain:** Users experience a clean SaaS interface without needing to understand blockchain complexities.
-- **Instant Underwriting:** AI agents analyze invoice metadata and client credibility in seconds.
-- **Decentralized Liquidity:** Investors fund verified invoices, earning a yield while providing immediate cash flow to the workforce.
-
-## 4. Key Features & Technologies
-
-### 🧠 AI-Driven OSINT Underwriting
-
-Unlike traditional systems that require manual audits, DraftFi uses an AI brain (Next.js + LLM) to:
-
-- Verify corporate domain legitimacy and email trails.
-- Profile the client company via OSINT APIs (Apollo, Whois, LinkedIn).
-- Assign an automated Risk Score (A+ to C).
-
-### 🔐 Soroban Smart Contracts
-
-- **Dynamic Collateral:** Holds 20% of the invoice value as "skin-in-the-game" to mitigate fraud.
-- **Automated Settlement:** Automatically distributes funds to investors and returns collateral to the user once the fiat payment is confirmed.
-
-### 🌊 Stellar Network Integration
-
-- **USDC:** Used as the primary liquidity asset for stability and low-cost transfers.
-- **Asset Minting:** Each invoice is minted as a unique representational asset on-chain.
-- **Passkey Signer:** Allows users to sign transactions using biometric security (FaceID/TouchID).
-
-## 5. The Workflow
-
-1.  **Submission:** The user uploads a PDF invoice to the Next.js dashboard.
-2.  **Verification:** The AI analyzes the invoice and sends a "Magic Link" to the client's finance department for cryptographic acknowledgement.
-3.  **Minting:** Upon approval, the invoice is listed on the DraftFi marketplace as a Stellar asset.
-4.  **Funding:** Liquidity Providers buy the invoice at a discount.
-5.  **Liquidation:** The user receives 80% of the value instantly in USDC.
-6.  **Settlement:** When the client pays the fiat invoice, the smart contract settles the debt and releases the remaining 20% to the user.
-
-## 6. Business Model
-
-- **Origination Fee:** 0.5% - 1.0% per funded invoice.
-- **Interest Spread:** Margin between the discounted purchase price and the face value.
-- **Settlement Fee:** Processing fee for routing fiat-to-USDC via Stellar Anchors.
+The long-term goal is simple: move productive financing on-chain, make capital access faster for builders, and turn community liquidity into real-world economic impact.
